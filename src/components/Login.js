@@ -3,15 +3,15 @@ import Header from "./Header";
 import {checkValidData} from "../utils/Validate";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import {updateProfile} from "firebase/auth";
-import {useNavigate} from "react-router-dom";
 import {auth} from "..//utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { photoURL, BGLOGO } from "../utils/constants";
 
 const Login = () => {
     const [isSignInForm, setIsSignInForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
-    const navigate=useNavigate();
+    
     const dispatch=useDispatch();
     const email=useRef(null);
     const password=useRef(null);
@@ -37,7 +37,7 @@ const Login = () => {
            const user = userCredential.user;
            updateProfile(user, {
             displayName: name.current.value,
-             photoURL: "https://lh3.googleusercontent.com/a/ACg8ocL-ngg-x8IFsaOmm7ztU9c0_AVbt5xmfHFFIOVwq2aYJ8jRE881=s360-c-no",
+             photoURL: photoURL,
           })
           .then(() => {
             // Profile updated!
@@ -46,7 +46,7 @@ const Login = () => {
             {uid, email, displayName, photoURL} = auth.currentUser;
             dispatch(addUser({uid: uid, email: email, displayName: displayName, photoURL: photoURL,}));
             
-            navigate("/browse");
+           
 
           }).catch((error) => {
             // An error occurred
@@ -70,7 +70,7 @@ const Login = () => {
             .then((userCredential) => {
           // Signed in 
               const user = userCredential.user;
-              navigate("/Browse");
+              
                    // ...
              })
          .catch((error) => {
@@ -91,7 +91,7 @@ const Login = () => {
     <div>
         <Header/>
       <div className="absolute">
-        <img src="https://assets.nflxext.com/ffe/siteui/vlv3/04bef84d-51f6-401e-9b8e-4a521cbce3c5/null/CA-en-20240903-TRIFECTA-perspective_753eb230-ee8c-48bf-a82a-c3acf0814dfe_small.jpg"
+        <img src={BGLOGO}
         alt="logo"
         />
       </div>
