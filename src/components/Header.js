@@ -5,6 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { addUser, removeUser } from "../utils/userSlice";
 import {LOGO} from "../utils/constants";
+import { toggleGPTSearchView } from "../utils/GPTSlice";
+import { SUPPORTED_LANGUAGES } from "../utils/constants";
+import { changeLanguage } from "../utils/configSlice";
 
 
 
@@ -12,6 +15,8 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate=useNavigate();
     const user=useSelector(store => store.user);
+    const showGPTSearchView = useSelector((store)=> store.gpt.showGPTSearch)
+    
 
 
     const handleSignOut = () => {
@@ -26,7 +31,7 @@ const Header = () => {
     };
 
     useEffect ( () => {
-        console.log("This is the useEffect on Header component");
+        
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
               // User is signed in, see docs for a list of available properties
@@ -53,6 +58,18 @@ const Header = () => {
 
     },[]);
 
+    const handleGPTSearchClick = () => {
+
+      dispatch(toggleGPTSearchView());
+
+
+    };
+
+    const handleLanguageChange = (e) => {
+      dispatch(changeLanguage(e.target.value));
+
+    }
+
 
 
 
@@ -66,7 +83,30 @@ const Header = () => {
             src={LOGO}
             alt="logo"/>
             {user &&
+            
+            
+            
+
             <div className="flex p-2">
+              {showGPTSearchView &&
+              <select className="p-2 m-2 bg-gray-900 text-white" onChange={handleLanguageChange}>
+                {SUPPORTED_LANGUAGES.map(lang => <option
+                key={lang.identifier} value={lang.identifier}>
+                  {lang.name}
+
+                </option>)}
+                
+              </select>
+                           }   
+                
+                
+                
+              <button className=" py-2 px-4 my-2  mx-4 rounded-lg bg-purple-800 text-white" 
+              onClick={handleGPTSearchClick}>
+                {showGPTSearchView?"HomePage":"GPT Search"}
+
+
+              </button>
                 <img className="w-10 h-10"
                 
                 alt="sign out logo"
